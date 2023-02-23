@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}" th:with="activeMenuItem='timeslot'"
+	lang="fr">
+
+<head>
+<title>timeslot</title>
+</head>
+<body>
+	<div layout:fragment="page-content">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+			<h1 class="text-2xl font-semibold text-gray-900"
+				th:text="${editeMode?.name() == 'UPDATE'}?#{edit}:#{create}">Create
+				timeslot</h1>
+		</div>
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+			<div class="py-4">
+				<div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
+					<form id="user-form" th:object="${timeslot}"
+						th:action="${editeMode?.name() =='UPDATE'}?@{/timeslot/timeslot/edit/{id}(id=${timeslot.timeslotId})}:@{/timeslot/create/timeslot}"
+						method="post">
+						<div>
+							<div th:replace="fragments/forms :: fielderrors"></div>
+							<div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+								<input type="hidden" th:field="*{version}"
+									th:if="${editeMode?.name() == 'UPDATE'}">
+								<!-- tag::textinputs[] -->
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{timeslot.headers.name}, fieldName='timeslotName', cssClass='sm:col-span-3')"></div>
+								<div
+									th:replace="fragments/forms :: timeinput(labelText=#{timeslot.headers.startHour},  fieldName='startHour', cssClass='sm:col-span-3',placeholder=#{timeslot.startHour.placeholder})"></div>
+								<div
+									th:replace="fragments/forms :: timeinput(labelText=#{timeslot.headers.endHour}, fieldName='endHour', cssClass='sm:col-span-4',placeholder=#{timeslot.endHour.placeholder})"></div>
+								<!-- <div  
+									th:replace="fragments/forms :: textinput(labelText=#{timeslot.headers.duration}, fieldName='duration', cssClass='sm:col-span-3')"></div> -->
+							 <div class="sm:col-span-2">
+                                <label for="dayOfWeek" class="block text-sm font-medium text-gray-700"  th:text="#{timeslot.headers.day}">Day of Week</label>
+                                <select id="dayOfWeek"
+                                        class="max-w-lg block focus:ring-green-500 focus:border-green-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                                        th:field="*{dayOfWeek}"> <!--.-->
+                                    <option th:each="day : ${dayOfWeek}"
+                                            th:text="#{'day.' + ${day.name()}}"
+                                            th:value="${day.name()}">User <!--.-->
+                                    </option>
+                                </select>
+								
+								
+								<div class="mt-8 border-t border-gray-200 pt-5">
+									<div class="flex justify-end">
+										<span class="inline-flex rounded-md shadow-sm">
+											<button type="button"
+												class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+												th:text="#{cancel}">Cancel</button>
+										</span> <span class="ml-3 inline-flex rounded-md shadow-sm">
+											<button type="submit"
+												class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+												th:text="${editeMode?.name() == 'UPDATE'}?#{save}:#{create}">Save</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<!-- end::full[] -->

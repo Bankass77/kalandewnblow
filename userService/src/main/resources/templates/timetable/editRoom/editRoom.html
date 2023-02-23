@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}" th:with="activeMenuItem='room'"
+	lang="fr">
+
+<head>
+<title>room</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<script th:replace="fragments/top-menu :: user-popup-menu-js"></script>
+
+</head>
+<body>
+	<div layout:fragment="page-content" >
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+			<h1 class="text-2xl font-semibold text-gray-900"
+				th:text="${editeMode?.name() == 'UPDATE'}?#{edit}:#{create}">Create
+				room</h1>
+		</div>
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+			<div class="py-4">
+				<div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
+					<form id="user-form" th:object="${room}"
+						th:action="${editeMode?.name() =='UPDATE'}?@{/room/edit/{id}(id=${room.roomId})}:@{/room/create}"
+						method="post" >
+						<fieldset class="flex justify-center">
+						<div th:replace="fragments/forms :: fielderrors"></div>
+						<div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+							<input type="hidden" th:field="*{version}"
+								th:if="${editeMode?.name() == 'UPDATE'}">
+							<!-- tag::textinputs[] -->
+									 <h2 th:text="#{room.create}">Add New Room</h2>
+						
+							<div
+								th:replace="fragments/forms :: textinput(labelText=#{room.headers.name}, fieldName='name', cssClass='sm:col-span-3')"></div>
+							<div
+								th:replace="fragments/forms :: textinput(labelText=#{room.headers.capacity}, fieldName='capacity', cssClass='sm:col-span-4')"></div>
+							<div>
+					
+							</div>
+								 <h2 th:text="#{school.create}">Create School</h2>
+							
+							<div
+									th:replace="fragments/forms :: textinput(labelText=#{school.headers.name}, fieldName='school.name', cssClass='sm:col-span-3')"></div>
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{school.headers.phoneNumber},  fieldName='school.phoneNumber', cssClass='sm:col-span-3')"></div>
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{school.headers.email}, fieldName='school.email', cssClass='sm:col-span-4', inputType='email')"></div>
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{student.address.street}, fieldName='school.address.street', cssClass='sm:col-span-2')",></div>
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{student.address.streetNumber}, fieldName='school.address.streetNumber', cssClass='sm:col-span-2')"></div>
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{student.address.city}, fieldName='school.address.city', cssClass='sm:col-span-2')"></div>
+
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{student.address.codePostale}, fieldName='school.address.codePostale', cssClass='sm:col-span-2')"></div>
+
+								<div
+									th:replace="fragments/forms :: textinput(labelText=#{student.address.country}, fieldName='school.address.country', cssClass='sm:col-span-2')"></div>
+							<!-- tag::RoomType[] -->
+							<div class="sm:col-span-2">
+								<label for="roomType"
+									class="block text-sm font-medium text-gray-700">Room
+									Type </label> <select id="roomType"
+									class="max-w-lg block focus:ring-green-500 focus:border-green-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+									th:field="*{roomType}">
+									<!--.-->
+									<option th:each="room : ${roomTypes}"
+										th:text="#{'room.' + ${room.name()}}"
+										th:value="${room.name()}">Room
+										<!--.-->
+									</option>
+								</select>
+							</div>
+							<!-- end::RoomType[] -->
+							<!-- end::textinputs[] -->
+							<div class="mt-8 border-t border-gray-200 pt-5">
+								<div class="flex justify-end">
+									<span class="inline-flex rounded-md shadow-sm">
+										<button type="button"
+											class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+											th:text="#{cancel}">Cancel</button>
+									</span> <span class="ml-3 inline-flex rounded-md shadow-sm">
+										<button type="submit"
+											class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+											th:text="${editeMode?.name() == 'UPDATE'}?#{save}:#{create}">Save</button>
+									</span>
+								</div>
+							</div>
+						</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<!-- end::full[] -->

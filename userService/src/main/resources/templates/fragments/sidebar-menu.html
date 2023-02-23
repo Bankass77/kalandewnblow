@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="fr">
+<div th:fragment="mobile" class="md:hidden" x-show="isVisible()">
+	<div class="fixed inset-0 flex z-40">
+		<!--
+          Off-canvas menu overlay
+        -->
+		<div class="fixed inset-0" aria-hidden="true" x-show="isVisible()"
+			x-cloak
+			x-transition:enter="transition-opacity ease-linear duration-300"
+			x-transition:enter-start="opacity-0"
+			x-transition:enter-end="opacity-100"
+			x-transition:leave="transition-opacity ease-linear duration-300"
+			x-transition:leave-start="opacity-100"
+			x-transition:leave-end="opacity-0">
+			<div class="absolute inset-0 bg-gray-600 opacity-75"></div>
+		</div>
+		<!--
+          Off-canvas menu
+        -->
+		<div
+			class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white"
+			x-show="isVisible()" x-cloak
+			x-transition:enter="transition ease-in-out duration-300 transform"
+			x-transition:enter-start="-translate-x-full"
+			x-transition:enter-end="translate-x-0"
+			x-transition:leave="transition ease-in-out duration-300 transform"
+			x-transition:leave-start="translate-x-0"
+			x-transition:leave-end="-translate-x-full">
+			<div class="absolute top-0 right-0 -mr-12 pt-2">
+				<!--
+                  Close sidebar menu button
+                -->
+				<button
+					class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+					@click="closeSidebar">
+					<span class="sr-only">Close sidebar</span>
+					<!-- Heroicon name: x -->
+					<svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg"
+						fill="none" viewBox="0 0 24 24" stroke="currentColor"
+						aria-hidden="true">
+                        <path stroke-linecap="round"
+							stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+				</button>
+			</div>
+			<div class="flex-shrink-0 flex items-center px-4">
+				<img class="h-10 w-auto" th:src="@{/img/classroom.jpg}"
+					alt="Application Logo" />
+			</div>
+			<div class="mt-5 flex-1 h-0 overflow-y-auto">
+				<nav class="px-2">
+					<a
+						th:replace="fragments/sidebar-buttons :: mobile-button(link='#', title=#{menu.dashboard}, menuItem='dashboard', icon='dashboard')"></a>
+					<a
+						th:replace="fragments/sidebar-buttons :: mobile-button(link='#', title=#{menu.student}, menuItem='Student', icon='Student')"></a>
+					<a
+						th:replace="fragments/sidebar-buttons :: mobile-button(link='#', title='Projects', menuItem='projects', icon='projects')"></a>
+					<a
+						th:replace="fragments/sidebar-buttons :: mobile-button(link='#', title=#{menu.calendar}, menuItem='calendar', icon='calendar')"></a>
+					<a
+						th:replace="fragments/sidebar-buttons :: mobile-button(link='#', title=#{menu.documents}, menuItem='documents', icon='documents')"></a>
+					<a
+						th:replace="fragments/sidebar-buttons :: mobile-button(link='#', title=#{menu.reports}, menuItem='reports', icon='reports')"></a>
+				</nav>
+			</div>
+		</div>
+		<div class="flex-shrink-0 w-14" aria-hidden="true">
+			<!-- Dummy element to force sidebar to shrink to fit close icon -->
+		</div>
+	</div>
+</div>
+<!-- Static sidebar for desktop -->
+<div th:fragment="desktop" class="hidden md:flex md:flex-shrink-0">
+	<div class="flex flex-col w-64">
+		<div
+			class="flex flex-col flex-grow border-r border-gray-200 pt-5 pb-4 bg-white overflow-y-auto">
+			<div class="flex items-center flex-shrink-0 px-4">
+				<img class="h-auto w-auto" th:src="@{/img/classroom.jpg}"
+					alt="Application Logo" />
+			</div>
+			<div class="mt-5 flex-grow flex flex-col" x-data="dropdown()">
+				<!-- tag::desktop-nav[] -->
+				<nav class="flex-1 px-2 bg-white">
+				
+				<!-- tag::Administrator dropdown -->
+					<ul class="space-y-2">
+						<li><a class="dropdown-item"
+							th:replace="fragments/sidebar-buttons :: desktop-button(link='#',title=#{menu.dashboard}, menuItem='dashboard', icon='dashboard')">
+						</a>
+						
+						</li>
+						<li>
+							<button type="button" class="dropdown-trigger"
+								id="open-color-menu" x-spread="trigger"
+								aria-controls="dropdown-trigger"
+								data-collapse-toggle="dropdown-trigger">
+
+								<span th:text="#{school.headers.adminstrator}"
+									class="flex-1 ml-3 text-left whitespace-nowrap"
+									sidebar-toggle-item>School Administration</span>
+								<svg sidebar-toggle-item class="w-6 h-6" fill="currentColor"
+									viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd"
+										d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+										clip-rule="evenodd"></path></svg>
+							</button>
+							<ul class="dropdown-list" id="color-menu" x-spread="dropdown"
+								x-cloak>
+								<li><a class="dropdown-item"
+									th:replace="fragments/sidebar-buttons :: desktop-button(link=@{/school/all}, title=#{menu.school}, menuItem='School', icon='team')">
+								</a></li>
+
+								<li><a class="dropdown-item"
+									th:replace="fragments/sidebar-buttons :: desktop-button(link=@{/students/all}, title=#{menu.student}, menuItem='Student', icon='user-group')"></a>
+								</li>
+
+								<li><a class="dropdown-item"
+									th:replace="fragments/sidebar-buttons :: desktop-button(link=@{/timeslot/allTimeslot}, title=#{menu.timeslot}, menuItem='Timeslot', icon='calendar')"></a>
+								</li>
+								<li><a class="dropdown-item"
+									th:replace="fragments/sidebar-buttons :: desktop-button(link=@{/room/all}, title=#{menu.room}, menuItem='Rooms', icon='team')"></a>
+								</li>
+
+								<li><a class="dropdown-item"
+									th:replace="fragments/sidebar-buttons :: desktop-button(link=@{/timetable/all}, title=#{menu.timetable}, menuItem='Timetable', icon='timesheet')"></a>
+								</li>
+
+								<li><a class="dropdown-item"
+									th:replace="fragments/sidebar-buttons :: desktop-button(link=@{/course/allCourse}, title=#{menu.course}, menuItem='Course', icon='user-group')"></a>
+								</li>
+								<li><a class="dropdown-item"
+									th:replace="fragments/sidebar-buttons :: desktop-button(link=@{/group/all}, title=#{menu.group}, menuItem='Group', icon='team')"></a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<!-- tag::Teacher dropdown -->
+					<ul class="space-y-2">
+						<li>
+							<button type="button" class="dropdown-trigger"
+								id="open-color-menu" x-spread="trigger"
+								aria-controls="dropdown-trigger"
+								data-collapse-toggle="dropdown-trigger">
+
+								<span th:text="#{UserRole.TEACHER}"
+									class="flex-1 ml-3 text-left whitespace-nowrap"
+									sidebar-toggle-item>Teacher</span>
+								<svg sidebar-toggle-item class="w-6 h-6" fill="currentColor"
+									viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd"
+										d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+										clip-rule="evenodd"></path></svg>
+							</button>
+							<ul class="dropdown-list" id="color-menu" x-spread="dropdown"
+								x-cloak>
+
+							</ul>
+
+						</li>
+					</ul>
+					<!-- end::Administrator dropdown -->
+					<!-- end::Teacher dropdown -->
+					<!-- tag::Student dropdown -->
+					<ul class="space-y-2">
+						<li>
+							<button type="button" class="dropdown-trigger"
+								id="open-color-menu" x-spread="trigger"
+								aria-controls="dropdown-trigger"
+								data-collapse-toggle="dropdown-trigger">
+
+								<span th:text="#{UserRole.STUDENT}"
+									class="flex-1 ml-3 text-left whitespace-nowrap"
+									sidebar-toggle-item>Student</span>
+								<svg sidebar-toggle-item class="w-6 h-6" fill="currentColor"
+									viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd"
+										d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+										clip-rule="evenodd"></path></svg>
+							</button>
+							<ul class="dropdown-list" id="color-menu" x-spread="dropdown"
+								x-cloak>
+
+							</ul>
+						</li>
+					</ul>
+ 				<!-- end::Student dropdown -->
+					<ul>
+						<li><a class="dropdown-item"
+							th:replace="fragments/sidebar-buttons :: desktop-button(link='#', title=#{menu.calendar}, menuItem='calendar', icon='calendar')"></a>
+						</li>
+						<li><a class="dropdown-item"
+							th:replace="fragments/sidebar-buttons :: desktop-button(link='#',  title=#{menu.documents}, menuItem='documents', icon='documents')"></a>
+						</li>
+						<li><a class="dropdown-item"
+							th:replace="fragments/sidebar-buttons :: desktop-button(link='#', title=#{menu.reports}, menuItem='reports', icon='reports')"></a>
+						</li>
+
+					</ul>
+				</nav>
+				<!-- end::desktop-nav[] -->
+			</div>
+		</div>
+	</div>
+</div>
+</html>
