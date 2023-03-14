@@ -1,0 +1,45 @@
+server:
+  port: 8000
+zuul:
+  ignoredServices: '*'
+  prefix: /auth
+  routes:
+    multiplications:
+      path: /userService/**
+      serviceId: userService
+      strip-prefix: false
+    results:
+      path: /auth/**
+      serviceId: userService
+      strip-prefix: false
+    users:
+      path: /users/**
+      serviceId: userService
+      strip-prefix: false
+   
+endpoints:
+  routes:
+    sensitive: false
+  trace:
+    sensitive: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+---
+# Adds admin routes for testing purposes
+spring:
+  config:
+    activate:
+      on-profile: dev
+zuul:
+  routes:
+    gamification-admin:
+      path: /gamification/admin/**
+      serviceId: gamification
+      strip-prefix: false
+    multiplication-admin:
+      path: /multiplication/admin/**
+      serviceId: multiplication
+      strip-prefix: false

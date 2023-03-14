@@ -28,7 +28,7 @@ public class DensagouAuthEventHandler {
 	@RabbitListener(queues = "${userService.queue}")
 	public void handlerMultiplicationSolved(final UserServiceSolvedEvent event) {
 
-		log.info("Multiplication solved Event received: {}", event.getUserId());
+		log.info("UserService solved Event received: {}", event.getUserId());
 
 		try {
 			authService.findByUsername(event.getEmail());
