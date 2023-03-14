@@ -1,9 +1,11 @@
 package authservice.densagouAuth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,14 +22,15 @@ import reactor.core.publisher.Mono;
 public class AuthController {
 
 	private final AuthService authService;
-	 private  final JwtUtil jwtUtil;
-     private BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final JwtUtil jwtUtil;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	@Autowired
-	public AuthController(final AuthService authService, JwtUtil jwtUtil,BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public AuthController(final AuthService authService, JwtUtil jwtUtil, BCryptPasswordEncoder bCryptPasswordEncoder) {
 
 		this.authService = authService;
-		this.jwtUtil= jwtUtil;
-		this.bCryptPasswordEncoder= bCryptPasswordEncoder;
+		this.jwtUtil = jwtUtil;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
 	@PostMapping(value = "/register")
@@ -36,14 +39,18 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest authRequest){
-		return authService.findByUsername(authRequest.getEmail()).filter(userDetails -> bCryptPasswordEncoder.encode(authRequest.getPassword())
-				.equals(userDetails.getPassword()))
-	            .map(userDetails -> ResponseEntity.ok(new AuthResponse(jwtUtil.generate(userDetails, userDetails.getEmail()), null)))
-	            .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
-	    
+	public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest authRequest) {
+		return authService.findByUsername(authRequest.getEmail())
+				.filter(userDetails -> bCryptPasswordEncoder.encode(authRequest.getPassword())
+						.equals(userDetails.getPassword()))
+				.map(userDetails -> ResponseEntity
+						.ok(new AuthResponse(jwtUtil.generate(userDetails, userDetails.getEmail()), null)))
+				.switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
 
-	
-
+	}
+	@Bean
+	public PasswordEncoder passwordEncoder()
+	{
+	    return new BCryptPasswordEncoder();
 	}
 }
